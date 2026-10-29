@@ -1,0 +1,954 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Google Cast",
+  "description": {
+    "en": "Control your Chromecast, Google Nest and Cast TVs locally: music, volume, announcements.",
+    "fr": "Pilotez Chromecast, Google Nest et TV Cast en local : musique, volume, annonces.",
+    "de": "Chromecast, Google Nest und Cast-TVs lokal steuern: Musik, Lautstärke, Ansagen.",
+    "es": "Controle Chromecast, Google Nest y TV Cast en local: música, volumen, anuncios."
+  },
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/gboulvin/gladys-google-cast:1.0.0",
+  "gladys_version": ">=5.3.0",
+  "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-Google-Cast/main/cover.png",
+  "categories": ["multimedia", "notifications"],
+  "keywords": [
+    "Chromecast",
+    "Google Home",
+    "Google Nest",
+    "Nest Audio",
+    "Nest Hub",
+    "Nest Mini",
+    "Google TV",
+    "Android TV",
+    "Cast",
+    "TTS"
+  ],
+  "transports": ["local"],
+  "network_discovery": [
+    {
+      "type": "mdns",
+      "service": "_googlecast._tcp"
+    }
+  ],
+  "music": {},
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Getting started",
+        "fr": "Pour commencer",
+        "de": "Erste Schritte",
+        "es": "Primeros pasos"
+      },
+      "description": {
+        "en": "Everything stays on your local network: no Google account, no cloud. Gladys finds your Cast devices (Chromecast, Google Nest, TVs with Chromecast built-in, speaker groups) by mDNS: open the Discovery tab and add them. Works in every country.",
+        "fr": "Tout reste sur votre réseau local : ni compte Google, ni cloud. Gladys trouve vos appareils Cast (Chromecast, Google Nest, TV avec Chromecast intégré, groupes d'enceintes) par mDNS : ouvrez l'onglet Découverte et ajoutez-les. Fonctionne dans tous les pays.",
+        "de": "Alles bleibt in Ihrem lokalen Netzwerk: kein Google-Konto, keine Cloud. Gladys findet Ihre Cast-Geräte (Chromecast, Google Nest, TVs mit integriertem Chromecast, Lautsprechergruppen) per mDNS: Öffnen Sie den Tab „Erkennung“ und fügen Sie sie hinzu. Funktioniert in jedem Land.",
+        "es": "Todo se queda en su red local: sin cuenta de Google ni nube. Gladys encuentra sus dispositivos Cast (Chromecast, Google Nest, televisores con Chromecast integrado, grupos de altavoces) por mDNS: abra la pestaña Descubrimiento y añádalos. Funciona en todos los países."
+      },
+      "links": [
+        {
+          "url": "https://support.google.com/chromecast/answer/7071794",
+          "label": {
+            "en": "Google Cast help: network requirements",
+            "fr": "Aide Google Cast : prérequis réseau",
+            "de": "Google-Cast-Hilfe: Netzwerkanforderungen",
+            "es": "Ayuda de Google Cast: requisitos de red"
+          }
+        }
+      ]
+    },
+    {
+      "key": "manual_hosts",
+      "type": "string",
+      "label": {
+        "en": "Manual addresses",
+        "fr": "Adresses manuelles",
+        "de": "Manuelle Adressen",
+        "es": "Direcciones manuales"
+      },
+      "description": {
+        "en": "Only for devices mDNS cannot reach (another VLAN or subnet): their IP addresses, separated by commas, with an optional :port. Give them a fixed address in your router.",
+        "fr": "Uniquement pour les appareils que le mDNS n'atteint pas (autre VLAN ou sous-réseau) : leurs adresses IP séparées par des virgules, avec un :port facultatif. Fixez leur adresse dans votre box.",
+        "de": "Nur für Geräte, die mDNS nicht erreicht (anderes VLAN oder Subnetz): ihre IP-Adressen, durch Kommas getrennt, mit optionalem :Port. Vergeben Sie ihnen im Router eine feste Adresse.",
+        "es": "Solo para dispositivos que el mDNS no alcanza (otra VLAN o subred): sus direcciones IP separadas por comas, con un :puerto opcional. Asígneles una dirección fija en su router."
+      },
+      "placeholder": {
+        "en": "e.g. 192.168.1.20, 192.168.1.21",
+        "fr": "ex. 192.168.1.20, 192.168.1.21",
+        "de": "z. B. 192.168.1.20, 192.168.1.21",
+        "es": "p. ej. 192.168.1.20, 192.168.1.21"
+      },
+      "required": false,
+      "default": ""
+    },
+    {
+      "key": "include_groups",
+      "type": "boolean",
+      "label": {
+        "en": "Speaker groups",
+        "fr": "Groupes d'enceintes",
+        "de": "Lautsprechergruppen",
+        "es": "Grupos de altavoces"
+      },
+      "description": {
+        "en": "Also offer the speaker groups created in the Google Home app.",
+        "fr": "Proposer aussi les groupes d'enceintes créés dans l'application Google Home.",
+        "de": "Auch die in der Google-Home-App erstellten Lautsprechergruppen anbieten.",
+        "es": "Ofrecer también los grupos de altavoces creados en la aplicación Google Home."
+      },
+      "required": false,
+      "default": true
+    },
+    {
+      "key": "notification_volume",
+      "type": "number",
+      "label": {
+        "en": "Announcement volume (%)",
+        "fr": "Volume des annonces (%)",
+        "de": "Lautstärke der Ansagen (%)",
+        "es": "Volumen de los anuncios (%)"
+      },
+      "description": {
+        "en": "Volume of the Gladys announcements (text-to-speech), the previous volume coming back afterwards. 0 keeps the current volume.",
+        "fr": "Volume des annonces de Gladys (synthèse vocale), le volume précédent revenant ensuite. 0 garde le volume actuel.",
+        "de": "Lautstärke der Gladys-Ansagen (Sprachausgabe), danach wird die vorherige Lautstärke wiederhergestellt. 0 behält die aktuelle Lautstärke.",
+        "es": "Volumen de los anuncios de Gladys (síntesis de voz); después vuelve el volumen anterior. 0 mantiene el volumen actual."
+      },
+      "required": false,
+      "default": 0,
+      "min": 0,
+      "max": 100
+    },
+    {
+      "key": "scan_timeout",
+      "type": "number",
+      "label": {
+        "en": "Scan duration (s)",
+        "fr": "Durée de la recherche (s)",
+        "de": "Suchdauer (s)",
+        "es": "Duración de la búsqueda (s)"
+      },
+      "description": {
+        "en": "How long to listen for devices during a scan. Raise it if some devices are missing.",
+        "fr": "Durée d'écoute des appareils pendant une recherche. Augmentez-la s'il manque des appareils.",
+        "de": "Wie lange bei einer Suche auf Geräte gewartet wird. Erhöhen, wenn Geräte fehlen.",
+        "es": "Tiempo de escucha de dispositivos durante una búsqueda. Auméntelo si faltan dispositivos."
+      },
+      "required": false,
+      "default": 5,
+      "min": 2,
+      "max": 30
+    }
+  ],
+  "actions": [
+    {
+      "key": "scan_network",
+      "label": {
+        "en": "Search the network",
+        "fr": "Rechercher sur le réseau",
+        "de": "Netzwerk durchsuchen",
+        "es": "Buscar en la red"
+      },
+      "description": {
+        "en": "Find the Cast devices again and refresh their addresses.",
+        "fr": "Retrouve les appareils Cast et met à jour leurs adresses.",
+        "de": "Findet die Cast-Geräte erneut und aktualisiert ihre Adressen.",
+        "es": "Vuelve a buscar los dispositivos Cast y actualiza sus direcciones."
+      },
+      "timeout_seconds": 45
+    },
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test a device",
+        "fr": "Tester un appareil",
+        "de": "Gerät testen",
+        "es": "Probar un dispositivo"
+      },
+      "description": {
+        "en": "Connect to a device and show its volume and the app it runs.",
+        "fr": "Se connecte à un appareil et affiche son volume et l'application en cours.",
+        "de": "Verbindet sich mit einem Gerät und zeigt Lautstärke und laufende App.",
+        "es": "Se conecta a un dispositivo y muestra su volumen y la aplicación en curso."
+      },
+      "timeout_seconds": 20,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Google Cast device",
+            "fr": "Appareil Google Cast",
+            "de": "Google-Cast-Gerät",
+            "es": "Dispositivo Google Cast"
+          },
+          "required": true
+        }
+      ]
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "playback_started",
+      "label": {
+        "en": "Cast playback started",
+        "fr": "Lecture Cast démarrée",
+        "de": "Cast-Wiedergabe gestartet",
+        "es": "Reproducción Cast iniciada"
+      },
+      "description": {
+        "en": "Something starts or resumes playing on a Cast device, or the track changes.",
+        "fr": "Un appareil Cast commence ou reprend une lecture, ou le morceau change.",
+        "de": "Ein Cast-Gerät startet oder setzt eine Wiedergabe fort, oder der Titel wechselt.",
+        "es": "Un dispositivo Cast empieza o reanuda una reproducción, o cambia la pista."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Google Cast device",
+            "fr": "Appareil Google Cast",
+            "de": "Google-Cast-Gerät",
+            "es": "Dispositivo Google Cast"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Title",
+            "fr": "Titre",
+            "de": "Titel",
+            "es": "Título"
+          }
+        },
+        {
+          "key": "artist",
+          "type": "string",
+          "label": {
+            "en": "Artist",
+            "fr": "Artiste",
+            "de": "Interpret",
+            "es": "Artista"
+          }
+        },
+        {
+          "key": "app",
+          "type": "string",
+          "label": {
+            "en": "App",
+            "fr": "Application",
+            "de": "App",
+            "es": "Aplicación"
+          }
+        }
+      ]
+    },
+    {
+      "key": "playback_stopped",
+      "label": {
+        "en": "Cast playback stopped",
+        "fr": "Lecture Cast arrêtée",
+        "de": "Cast-Wiedergabe gestoppt",
+        "es": "Reproducción Cast detenida"
+      },
+      "description": {
+        "en": "The media playing on a Cast device ended, was stopped, interrupted or failed.",
+        "fr": "Le média d'un appareil Cast s'est terminé, a été arrêté, interrompu ou a échoué.",
+        "de": "Das Medium eines Cast-Geräts ist zu Ende, wurde gestoppt, unterbrochen oder ist fehlgeschlagen.",
+        "es": "El medio de un dispositivo Cast terminó, se detuvo, se interrumpió o falló."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Google Cast device",
+            "fr": "Appareil Google Cast",
+            "de": "Google-Cast-Gerät",
+            "es": "Dispositivo Google Cast"
+          }
+        },
+        {
+          "key": "reason",
+          "type": "multi_select",
+          "label": {
+            "en": "Reason",
+            "fr": "Raison",
+            "de": "Grund",
+            "es": "Motivo"
+          },
+          "options": [
+            {
+              "value": "finished",
+              "label": {
+                "en": "Finished",
+                "fr": "Terminé",
+                "de": "Beendet",
+                "es": "Terminado"
+              }
+            },
+            {
+              "value": "cancelled",
+              "label": {
+                "en": "Stopped",
+                "fr": "Arrêté",
+                "de": "Gestoppt",
+                "es": "Detenido"
+              }
+            },
+            {
+              "value": "interrupted",
+              "label": {
+                "en": "Interrupted",
+                "fr": "Interrompu",
+                "de": "Unterbrochen",
+                "es": "Interrumpido"
+              }
+            },
+            {
+              "value": "error",
+              "label": {
+                "en": "Error",
+                "fr": "Erreur",
+                "de": "Fehler",
+                "es": "Error"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "reason",
+          "type": "string",
+          "label": {
+            "en": "Reason",
+            "fr": "Raison",
+            "de": "Grund",
+            "es": "Motivo"
+          }
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Title",
+            "fr": "Titre",
+            "de": "Titel",
+            "es": "Título"
+          }
+        }
+      ]
+    },
+    {
+      "key": "app_launched",
+      "label": {
+        "en": "Cast app launched",
+        "fr": "Application Cast lancée",
+        "de": "Cast-App gestartet",
+        "es": "Aplicación Cast iniciada"
+      },
+      "description": {
+        "en": "An app starts casting to a device (YouTube, Netflix, Spotify...).",
+        "fr": "Une application commence à diffuser sur un appareil (YouTube, Netflix, Spotify...).",
+        "de": "Eine App beginnt, auf ein Gerät zu streamen (YouTube, Netflix, Spotify ...).",
+        "es": "Una aplicación empieza a transmitir a un dispositivo (YouTube, Netflix, Spotify...)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Google Cast device",
+            "fr": "Appareil Google Cast",
+            "de": "Google-Cast-Gerät",
+            "es": "Dispositivo Google Cast"
+          }
+        },
+        {
+          "key": "app",
+          "type": "string",
+          "label": {
+            "en": "App name",
+            "fr": "Nom de l'application",
+            "de": "App-Name",
+            "es": "Nombre de la aplicación"
+          },
+          "description": {
+            "en": "Exact name, e.g. YouTube. Empty: any app.",
+            "fr": "Nom exact, ex. YouTube. Vide : toute application.",
+            "de": "Genauer Name, z. B. YouTube. Leer: jede App.",
+            "es": "Nombre exacto, p. ej. YouTube. Vacío: cualquier aplicación."
+          },
+          "placeholder": {
+            "en": "e.g. YouTube",
+            "fr": "ex. YouTube",
+            "de": "z. B. YouTube",
+            "es": "p. ej. YouTube"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "app",
+          "type": "string",
+          "label": {
+            "en": "App",
+            "fr": "Application",
+            "de": "App",
+            "es": "Aplicación"
+          }
+        },
+        {
+          "key": "app_id",
+          "type": "string",
+          "label": {
+            "en": "App id",
+            "fr": "Identifiant de l'application",
+            "de": "App-ID",
+            "es": "Id. de la aplicación"
+          }
+        }
+      ]
+    },
+    {
+      "key": "availability_changed",
+      "label": {
+        "en": "Cast device online / offline",
+        "fr": "Appareil Cast en ligne / hors ligne",
+        "de": "Cast-Gerät online / offline",
+        "es": "Dispositivo Cast en línea / sin conexión"
+      },
+      "description": {
+        "en": "A Cast device became reachable or unreachable (powered off, Wi-Fi lost).",
+        "fr": "Un appareil Cast devient joignable ou injoignable (éteint, Wi-Fi perdu).",
+        "de": "Ein Cast-Gerät wird erreichbar oder unerreichbar (ausgeschaltet, WLAN verloren).",
+        "es": "Un dispositivo Cast pasa a estar accesible o inaccesible (apagado, Wi-Fi perdido)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Google Cast device",
+            "fr": "Appareil Google Cast",
+            "de": "Google-Cast-Gerät",
+            "es": "Dispositivo Google Cast"
+          }
+        },
+        {
+          "key": "status",
+          "type": "multi_select",
+          "label": {
+            "en": "Status",
+            "fr": "Statut",
+            "de": "Status",
+            "es": "Estado"
+          },
+          "options": [
+            {
+              "value": "online",
+              "label": {
+                "en": "Online",
+                "fr": "En ligne",
+                "de": "Online",
+                "es": "En línea"
+              }
+            },
+            {
+              "value": "offline",
+              "label": {
+                "en": "Offline",
+                "fr": "Hors ligne",
+                "de": "Offline",
+                "es": "Sin conexión"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "status",
+          "type": "string",
+          "label": {
+            "en": "Status",
+            "fr": "Statut",
+            "de": "Status",
+            "es": "Estado"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "cast_media",
+      "label": {
+        "en": "Cast a media",
+        "fr": "Diffuser un média",
+        "de": "Medium streamen",
+        "es": "Transmitir un medio"
+      },
+      "description": {
+        "en": "Play a web radio, a sound, a video or a picture from its URL on a Cast device.",
+        "fr": "Lit une webradio, un son, une vidéo ou une image depuis son URL sur un appareil Cast.",
+        "de": "Spielt ein Webradio, einen Ton, ein Video oder ein Bild per URL auf einem Cast-Gerät ab.",
+        "es": "Reproduce una radio web, un sonido, un vídeo o una imagen desde su URL en un dispositivo Cast."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Google Cast device",
+            "fr": "Appareil Google Cast",
+            "de": "Google-Cast-Gerät",
+            "es": "Dispositivo Google Cast"
+          },
+          "required": true
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "required": true,
+          "label": {
+            "en": "Media URL",
+            "fr": "URL du média",
+            "de": "Medien-URL",
+            "es": "URL del medio"
+          },
+          "description": {
+            "en": "Must be reachable by the Cast device (http or https).",
+            "fr": "Doit être accessible par l'appareil Cast (http ou https).",
+            "de": "Muss für das Cast-Gerät erreichbar sein (http oder https).",
+            "es": "Debe ser accesible para el dispositivo Cast (http o https)."
+          },
+          "placeholder": {
+            "en": "e.g. https://example.com/stream.mp3",
+            "fr": "ex. https://example.com/flux.mp3",
+            "de": "z. B. https://example.com/stream.mp3",
+            "es": "p. ej. https://example.com/stream.mp3"
+          }
+        },
+        {
+          "key": "content_type",
+          "type": "select",
+          "label": {
+            "en": "Format",
+            "fr": "Format",
+            "de": "Format",
+            "es": "Formato"
+          },
+          "default": "auto",
+          "options": [
+            {
+              "value": "auto",
+              "label": {
+                "en": "Automatic (from the URL)",
+                "fr": "Automatique (selon l'URL)",
+                "de": "Automatisch (aus der URL)",
+                "es": "Automático (según la URL)"
+              }
+            },
+            {
+              "value": "audio/mpeg",
+              "label": {
+                "en": "Audio MP3",
+                "fr": "Audio MP3",
+                "de": "Audio MP3",
+                "es": "Audio MP3"
+              }
+            },
+            {
+              "value": "audio/aac",
+              "label": {
+                "en": "Audio AAC",
+                "fr": "Audio AAC",
+                "de": "Audio AAC",
+                "es": "Audio AAC"
+              }
+            },
+            {
+              "value": "audio/ogg",
+              "label": {
+                "en": "Audio Ogg / Opus",
+                "fr": "Audio Ogg / Opus",
+                "de": "Audio Ogg / Opus",
+                "es": "Audio Ogg / Opus"
+              }
+            },
+            {
+              "value": "audio/wav",
+              "label": {
+                "en": "Audio WAV",
+                "fr": "Audio WAV",
+                "de": "Audio WAV",
+                "es": "Audio WAV"
+              }
+            },
+            {
+              "value": "audio/flac",
+              "label": {
+                "en": "Audio FLAC",
+                "fr": "Audio FLAC",
+                "de": "Audio FLAC",
+                "es": "Audio FLAC"
+              }
+            },
+            {
+              "value": "video/mp4",
+              "label": {
+                "en": "Video MP4",
+                "fr": "Vidéo MP4",
+                "de": "Video MP4",
+                "es": "Vídeo MP4"
+              }
+            },
+            {
+              "value": "video/webm",
+              "label": {
+                "en": "Video WebM",
+                "fr": "Vidéo WebM",
+                "de": "Video WebM",
+                "es": "Vídeo WebM"
+              }
+            },
+            {
+              "value": "application/x-mpegURL",
+              "label": {
+                "en": "HLS stream (m3u8)",
+                "fr": "Flux HLS (m3u8)",
+                "de": "HLS-Stream (m3u8)",
+                "es": "Flujo HLS (m3u8)"
+              }
+            },
+            {
+              "value": "image/jpeg",
+              "label": {
+                "en": "Image JPEG",
+                "fr": "Image JPEG",
+                "de": "Bild JPEG",
+                "es": "Imagen JPEG"
+              }
+            },
+            {
+              "value": "image/png",
+              "label": {
+                "en": "Image PNG",
+                "fr": "Image PNG",
+                "de": "Bild PNG",
+                "es": "Imagen PNG"
+              }
+            }
+          ]
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Title shown",
+            "fr": "Titre affiché",
+            "de": "Angezeigter Titel",
+            "es": "Título mostrado"
+          }
+        },
+        {
+          "key": "live",
+          "type": "boolean",
+          "label": {
+            "en": "Live stream (web radio)",
+            "fr": "Flux en direct (webradio)",
+            "de": "Livestream (Webradio)",
+            "es": "Emisión en directo (radio web)"
+          },
+          "default": false
+        },
+        {
+          "key": "volume",
+          "type": "number",
+          "label": {
+            "en": "Volume (%)",
+            "fr": "Volume (%)",
+            "de": "Lautstärke (%)",
+            "es": "Volumen (%)"
+          },
+          "description": {
+            "en": "Leave empty to keep the current volume.",
+            "fr": "Laissez vide pour garder le volume actuel.",
+            "de": "Leer lassen, um die aktuelle Lautstärke beizubehalten.",
+            "es": "Déjelo vacío para mantener el volumen actual."
+          },
+          "min": 0,
+          "max": 100
+        }
+      ],
+      "outputs": [
+        {
+          "key": "played",
+          "type": "boolean",
+          "label": {
+            "en": "Media started",
+            "fr": "Média lancé",
+            "de": "Medium gestartet",
+            "es": "Medio iniciado"
+          }
+        }
+      ]
+    },
+    {
+      "key": "play_sound",
+      "label": {
+        "en": "Play a sound",
+        "fr": "Jouer un son",
+        "de": "Ton abspielen",
+        "es": "Reproducir un sonido"
+      },
+      "description": {
+        "en": "Play a short sound (chime, alarm) at a given volume, then restore the previous volume.",
+        "fr": "Joue un son court (carillon, alarme) à un volume donné, puis remet le volume précédent.",
+        "de": "Spielt einen kurzen Ton (Gong, Alarm) mit einer Lautstärke und stellt danach die vorherige wieder her.",
+        "es": "Reproduce un sonido corto (timbre, alarma) a un volumen dado y luego restaura el volumen anterior."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Google Cast device",
+            "fr": "Appareil Google Cast",
+            "de": "Google-Cast-Gerät",
+            "es": "Dispositivo Google Cast"
+          },
+          "required": true
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "required": true,
+          "label": {
+            "en": "Media URL",
+            "fr": "URL du média",
+            "de": "Medien-URL",
+            "es": "URL del medio"
+          },
+          "description": {
+            "en": "An audio file reachable by the Cast device (http or https).",
+            "fr": "Un fichier audio accessible par l'appareil Cast (http ou https).",
+            "de": "Eine Audiodatei, die für das Cast-Gerät erreichbar ist (http oder https).",
+            "es": "Un archivo de audio accesible para el dispositivo Cast (http o https)."
+          },
+          "placeholder": {
+            "en": "e.g. https://example.com/stream.mp3",
+            "fr": "ex. https://example.com/flux.mp3",
+            "de": "z. B. https://example.com/stream.mp3",
+            "es": "p. ej. https://example.com/stream.mp3"
+          }
+        },
+        {
+          "key": "volume",
+          "type": "number",
+          "label": {
+            "en": "Volume (%)",
+            "fr": "Volume (%)",
+            "de": "Lautstärke (%)",
+            "es": "Volumen (%)"
+          },
+          "description": {
+            "en": "Leave empty to keep the current volume.",
+            "fr": "Laissez vide pour garder le volume actuel.",
+            "de": "Leer lassen, um die aktuelle Lautstärke beizubehalten.",
+            "es": "Déjelo vacío para mantener el volumen actual."
+          },
+          "min": 0,
+          "max": 100
+        }
+      ],
+      "outputs": [
+        {
+          "key": "played",
+          "type": "boolean",
+          "label": {
+            "en": "Sound played",
+            "fr": "Son joué",
+            "de": "Ton abgespielt",
+            "es": "Sonido reproducido"
+          }
+        }
+      ]
+    },
+    {
+      "key": "stop_casting",
+      "label": {
+        "en": "Stop casting",
+        "fr": "Arrêter la diffusion",
+        "de": "Streaming stoppen",
+        "es": "Detener la transmisión"
+      },
+      "description": {
+        "en": "Quit the app casting to a device (YouTube, Netflix, Spotify...).",
+        "fr": "Quitte l'application qui diffuse sur un appareil (YouTube, Netflix, Spotify...).",
+        "de": "Beendet die App, die auf ein Gerät streamt (YouTube, Netflix, Spotify ...).",
+        "es": "Cierra la aplicación que transmite a un dispositivo (YouTube, Netflix, Spotify...)."
+      },
+      "timeout_seconds": 20,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Google Cast device",
+            "fr": "Appareil Google Cast",
+            "de": "Google-Cast-Gerät",
+            "es": "Dispositivo Google Cast"
+          },
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "stopped",
+          "type": "boolean",
+          "label": {
+            "en": "Casting stopped",
+            "fr": "Diffusion arrêtée",
+            "de": "Streaming gestoppt",
+            "es": "Transmisión detenida"
+          },
+          "description": {
+            "en": "False when nothing was casting or the device is unreachable.",
+            "fr": "Faux si rien n'était diffusé ou si l'appareil est injoignable.",
+            "de": "Falsch, wenn nichts gestreamt wurde oder das Gerät unerreichbar ist.",
+            "es": "Falso si no se transmitía nada o el dispositivo es inaccesible."
+          }
+        }
+      ]
+    },
+    {
+      "key": "launch_app",
+      "label": {
+        "en": "Launch a Cast app",
+        "fr": "Lancer une application Cast",
+        "de": "Cast-App starten",
+        "es": "Iniciar una aplicación Cast"
+      },
+      "description": {
+        "en": "Open a Cast app on a device from its app id (e.g. 233637DE for YouTube).",
+        "fr": "Ouvre une application Cast sur un appareil via son identifiant (ex. 233637DE pour YouTube).",
+        "de": "Öffnet eine Cast-App auf einem Gerät über ihre App-ID (z. B. 233637DE für YouTube).",
+        "es": "Abre una aplicación Cast en un dispositivo por su id. (p. ej. 233637DE para YouTube)."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Google Cast device",
+            "fr": "Appareil Google Cast",
+            "de": "Google-Cast-Gerät",
+            "es": "Dispositivo Google Cast"
+          },
+          "required": true
+        },
+        {
+          "key": "app_id",
+          "type": "string",
+          "required": true,
+          "label": {
+            "en": "App id",
+            "fr": "Identifiant de l'application",
+            "de": "App-ID",
+            "es": "Id. de la aplicación"
+          },
+          "placeholder": {
+            "en": "e.g. 233637DE",
+            "fr": "ex. 233637DE",
+            "de": "z. B. 233637DE",
+            "es": "p. ej. 233637DE"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "launched",
+          "type": "boolean",
+          "label": {
+            "en": "App launched",
+            "fr": "Application lancée",
+            "de": "App gestartet",
+            "es": "Aplicación iniciada"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "cast_overview",
+      "label": {
+        "en": "Google Cast devices",
+        "fr": "Appareils Google Cast",
+        "de": "Google-Cast-Geräte",
+        "es": "Dispositivos Google Cast"
+      },
+      "description": {
+        "en": "Every Cast device at a glance: online, casting, playing.",
+        "fr": "Tous les appareils Cast d'un coup d'œil : en ligne, diffusion, lecture.",
+        "de": "Alle Cast-Geräte auf einen Blick: online, Streaming, Wiedergabe.",
+        "es": "Todos los dispositivos Cast de un vistazo: en línea, transmisión, reproducción."
+      },
+      "icon": "cast"
+    },
+    {
+      "key": "cast_player",
+      "label": {
+        "en": "Google Cast player",
+        "fr": "Lecteur Google Cast",
+        "de": "Google-Cast-Player",
+        "es": "Reproductor Google Cast"
+      },
+      "description": {
+        "en": "One Cast device: what plays, its volume, play / pause / next / stop.",
+        "fr": "Un appareil Cast : lecture en cours, volume, lecture / pause / suivant / arrêt.",
+        "de": "Ein Cast-Gerät: Wiedergabe, Lautstärke, Play / Pause / Weiter / Stopp.",
+        "es": "Un dispositivo Cast: lo que suena, volumen, reproducir / pausa / siguiente / parar."
+      },
+      "icon": "speaker",
+      "settings": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Google Cast device",
+            "fr": "Appareil Google Cast",
+            "de": "Google-Cast-Gerät",
+            "es": "Dispositivo Google Cast"
+          },
+          "required": true
+        }
+      ],
+      "action_timeout_seconds": 20
+    }
+  ]
+}
