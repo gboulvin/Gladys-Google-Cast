@@ -10,7 +10,7 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
-## [2.0.0] - 2026-10-29
+## [1.0.0] - 2026-10-29
 
 ### Added
 
@@ -36,5 +36,5 @@ the notes of the version's GitHub Release.
 - `SECURITY.md` (how to report a vulnerability, security model) and
   `CLAUDE.md` (project rules for contributors and coding assistants).
 
-[Unreleased]: https://github.com/gboulvin/Gladys-Google-Cast/compare/v2.0.0...HEAD
-[2.0.0]: https://github.com/gboulvin/Gladys-Google-Cast/releases/tag/v2.0.0
+[Unreleased]: https://github.com/gboulvin/Gladys-Google-Cast/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/gboulvin/Gladys-Google-Cast/releases/tag/v1.0.0

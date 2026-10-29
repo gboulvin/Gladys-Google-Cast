@@ -1,6 +1,6 @@
 {
   "name": "gladys-google-cast",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Google Cast integration for Gladys Assistant: Chromecast, Google Nest speakers and displays, Cast TVs and speaker groups, controlled on the local network.",
   "type": "module",
